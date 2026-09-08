@@ -47,6 +47,9 @@ class AppConfig(msgspec.Struct):
     proxy_db_path: Path = msgspec.field(default_factory=default_db_path)
     xray_template_path: Path = msgspec.field(default_factory=default_xray_template_path)
     mihomo_template_path: Path = msgspec.field(default_factory=default_mihomo_template_path)
+    mihomo_ua_regex: str = (
+        "^(?:flclash|flowvy|murge|mihomo|prizrak-box|koala-clash|clash(?:-verge|-nyanpasu|x meta|[-.]?meta))"
+    )
     path_prefix: str = "/"
     update_proxies_on_start: bool = False
 

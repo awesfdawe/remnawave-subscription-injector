@@ -1,4 +1,5 @@
 import logging
+import re
 import sys
 from contextlib import asynccontextmanager
 from os import getenv
@@ -20,7 +21,7 @@ from app.logging import setup_logging
 from app.proxy.models import ProxyProvider
 from app.proxy.parser import dump_xray_subscription, get_validated_xray_configs
 from app.proxy.schemas.xray import XrayConfigSchema
-from app.proxy.templates import get_xray_template, merge_with_xray_template
+from app.proxy.templates import get_mihomo_template, get_xray_template, merge_with_xray_template
 from app.users import get_users
 
 setup_logging()
@@ -67,6 +68,8 @@ async def lifespan(app: Litestar):
     app.state.users = users
     app.state.users_prefixes = {user.path_prefix for user in users.users.values()}
     app.state.xray_template = get_xray_template(config.app.xray_template_path)
+    app.state.mihomo_template = get_mihomo_template(config.app.mihomo_template_path)
+    app.state.mihomo_ua_regex = re.compile(config.app.mihomo_ua_regex, re.IGNORECASE)
 
     config.app.proxy_db_path.parent.mkdir(parents=True, exist_ok=True)
     db = Database(f"sqlite+aiosqlite:///{config.app.proxy_db_path}")
